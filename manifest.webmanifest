@@ -1,0 +1,9 @@
+{
+  "name": "NBA Glory",
+  "short_name": "NBA Glory",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080b14",
+  "theme_color": "#080b14",
+  "description": "Simulador de carrera con contratos, lesiones, traspasos y agencia libre."
+}
