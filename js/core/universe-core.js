@@ -2,8 +2,8 @@ import { EventBus } from "./event-bus.js";
 import { createUniverseRepository } from "./universe-repository.js";
 import { auditAtlasIntegrity, compactAtlasJournal } from "./atlas-integrity.js";
 
-export const ATLAS_SCHEMA_VERSION = 12;
-export const ATLAS_GAME_VERSION = "2.0.17-clutch-moments";
+export const ATLAS_SCHEMA_VERSION = 14;
+export const ATLAS_GAME_VERSION = "2.0.19-draft-projection";
 
 const emptyCollections = () => ({
   players: {}, teams: {}, coaches: {}, competitions: {}, contracts: {}, seasons: {}, awards: {}, records: {}, relationships: {}
@@ -29,6 +29,8 @@ export function migrateAtlas(game) {
   if (previousSchema < 10) atlas.migrations.push({from: Math.max(previousSchema, 9), to: 10, id: "franchise-consequences", appliedAt: new Date().toISOString()});
   if (previousSchema < 11) atlas.migrations.push({from: Math.max(previousSchema, 10), to: 11, id: "coaching-systems", appliedAt: new Date().toISOString()});
   if (previousSchema < 12) atlas.migrations.push({from: Math.max(previousSchema, 11), to: 12, id: "clutch-moments", appliedAt: new Date().toISOString()});
+  if (previousSchema < 13) atlas.migrations.push({from: Math.max(previousSchema, 12), to: 13, id: "player-development", appliedAt: new Date().toISOString()});
+  if (previousSchema < 14) atlas.migrations.push({from: Math.max(previousSchema, 13), to: 14, id: "draft-projection", appliedAt: new Date().toISOString()});
   atlas.schema = ATLAS_SCHEMA_VERSION;
   atlas.gameVersion = ATLAS_GAME_VERSION;
   atlas.createdAt ??= new Date().toISOString();

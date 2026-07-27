@@ -1,4 +1,4 @@
-const CACHE="nba-glory-v2-0-17-menu-hotfix";
+const CACHE="nba-glory-v2.0.19-draft-projection";
 const ASSETS=["./","./index.html","./css/app.css","./js/app.js","./js/ui/app-shell.js",
   "./js/ui/feedback-center.js","./js/ui/view-registry.js","./js/ui/views/career-views.js","./js/ui/views/media-views.js","./js/ui/views/encyclopedia-views.js","./js/controllers/game-actions.js","./js/controllers/game-controller.js","./js/core/random-engine.js","./js/core/event-bus.js","./js/core/entity-manager.js","./js/core/universe-repository.js","./js/core/universe-core.js","./js/core/save-engine.js","./js/core/game-state.js","./js/engine/game-engine.js","./js/engine/season-result-engine.js","./js/engine/persistence-engine.js","./js/engine/health-engine.js","./js/engine/encyclopedia-engine.js","./js/engine/basketball-universe-engine.js","./js/engine/player-engine.js","./js/engine/simulation-engine.js","./js/engine/competition-profiles.js","./js/engine/universal-simulation-engine.js","./js/engine/balance-engine.js",
   "./js/engine/balance-lab-engine.js",

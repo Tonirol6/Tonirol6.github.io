@@ -1,7 +1,7 @@
 {
   "version": "1.1.0",
-  "generatedAt": "2026-07-27T08:43:28.267Z",
-  "sampleSize": 192,
+  "generatedAt": "2026-07-27T13:42:46.857Z",
+  "sampleSize": 96,
   "meta": {
     "maxSeasons": 25,
     "seedPrefix": "nba-glory-2.0.13",
@@ -13,52 +13,62 @@
     ]
   },
   "metrics": {
-    "careerSeasons": 17.99,
-    "retirementAge": 36.96,
+    "careerSeasons": 20.57,
+    "retirementAge": 36.54,
     "peakOvr": 88.06,
-    "finalOvr": 79.77,
-    "teamsPlayed": 1.95,
-    "allStars": 1.44,
-    "mvps": 1.06,
-    "championships": 0.22,
-    "injuries": 6.31,
-    "severeInjuries": 0.24,
-    "draftPick": 44.82,
-    "hallOfFameRate": 0.3021,
-    "superstarRate": 0.276,
-    "journeymanRate": 0.0052,
-    "mvpRate": 0.4479,
-    "championRate": 0.1771,
-    "earlyRetirementRate": 0
+    "finalOvr": 79.4,
+    "teamsPlayed": 1.79,
+    "allStars": 1.79,
+    "mvps": 1.25,
+    "championships": 0.31,
+    "injuries": 7.06,
+    "severeInjuries": 0.36,
+    "draftPick": 44.64,
+    "hallOfFameRate": 0.3854,
+    "superstarRate": 0.3542,
+    "journeymanRate": 0,
+    "mvpRate": 0.5104,
+    "championRate": 0.25,
+    "earlyRetirementRate": 0.0313
   },
   "distributions": {
     "careerSeasons": {
-      "p10": 16,
-      "median": 18,
-      "p90": 20
+      "p10": 19,
+      "median": 21,
+      "p90": 23
     },
     "peakOvr": {
-      "p10": 85,
-      "median": 88,
+      "p10": 86,
+      "median": 89,
       "p90": 91
     },
     "allStars": {
       "p10": 0,
       "median": 0,
-      "p90": 5
+      "p90": 6
     },
     "injuries": {
-      "p10": 3,
-      "median": 6,
-      "p90": 9
+      "p10": 4,
+      "median": 7,
+      "p90": 10
     }
   },
   "evaluation": {
-    "ok": true,
+    "ok": false,
     "diagnostics": [
       {
+        "key": "careerSeasons",
+        "value": 20.57,
+        "status": "high",
+        "expected": [
+          13,
+          19
+        ],
+        "severity": "warning"
+      },
+      {
         "key": "journeymanRate",
-        "value": 0.0052,
+        "value": 0,
         "status": "low",
         "expected": [
           0.08,

@@ -110,7 +110,14 @@ export function createGame({name, position, archetype, nationality="España", di
   const gameSeed=seed ?? createSeed(`${name}|${position}|${archetype}`);
   Random.seed(gameSeed);
   const difficultyProfile=getDifficultyProfile(difficulty);
-  const player=createPlayer({name,position,archetype,age:19,baseOvr:roll(70+difficultyProfile.baseOvr,76+difficultyProfile.baseOvr),seed:`${gameSeed}|player`});
+  const startingOvr=roll(55+difficultyProfile.baseOvr,60+difficultyProfile.baseOvr);
+  const player=createPlayer({name,position,archetype,age:16,baseOvr:startingOvr,seed:`${gameSeed}|player`});
+  // Archetype bonuses define the profile, but must not inflate the starting level.
+  for(let guard=0;guard<20&&player.ovr!==startingOvr;guard++){
+    const direction=player.ovr>startingOvr?-1:1;
+    Object.keys(player.attributes).forEach(key=>player.attributes[key]=clamp(player.attributes[key]+direction,25,99));
+    refreshPlayer(player);
+  }
   applyDifficultyToPlayer(player,difficultyProfile);
   Object.assign(player,{nationality,morale:75,teamId:null,draftPick:null,championships:0,mvps:0,finalsMvps:0,allStars:0,allNbaSelections:0,dpoys:0,career:[],contract:null,tradeRequests:0,injuryHistory:[],currentInjury:null,role:"Prospecto",coachTrust:55,seasonsWithTeam:0,teamsPlayed:[],hidden:{workEthic:player.dna.workEthic,durability:clamp(100-player.dna.injuryRisk*1.4,55,95),clutch:player.dna.clutch,scoring:0,assists:0,rebounds:0,loyalty:roll(45,95),ego:roll(35,90),truePotential:player.dna.potential,potentialBand:difficultyProfile.id==="easy"?"favorable":difficultyProfile.id==="hard"?"uncertain":"balanced"}});
   const game=migrateGame({version:16,season:2026,phase:"pathway",settings:{difficulty:difficultyProfile.id},atlas:{random:{...Random.snapshot()}},league:{coaches:Object.fromEntries(TEAMS.map(t=>[t.id,randomCoach(t)]))},player,pendingDecision:null,lastSummary:null});
@@ -121,7 +128,10 @@ export function runDraft(game) {
   game = migrateGame(game);
   const p=refreshPlayer(game.player);
   const pathwayStock=p.preDraft?.stock??50;
-  const draftScore=p.ovr*.58+p.potential*.24+pathwayStock*.18+roll(-5,5);
+  const draftAge=p.age??19, collegeYears=p.preDraft?.route==='college'?(p.preDraft?.year??0):0;
+  const truePotential=p.hidden?.truePotential??p.potential??75;
+  const agePenalty=Math.max(0,draftAge-19)*4.5+Math.max(0,collegeYears-1)*5.5;
+  const draftScore=truePotential*.50+pathwayStock*.30+p.ovr*.20-agePenalty+roll(-3,3);
   const projected=p.preDraft?.mockPick;
   const draftWorld=resolveUserDraft(game,{score:draftScore,projected,position:p.position});
   const pick=draftWorld.pick;
@@ -292,16 +302,19 @@ function makeDecision(game) {
     return {type:"freeAgencyMarket",title:"Agencia libre",text:"Cada franquicia responde a su situación deportiva, necesidad de plantilla, presupuesto y relación previa contigo.",offers,options:offers.filter(o=>o.status!=="withdrawn").map(o=>({id:`review_${o.teamId}`,title:o.teamName,text:`${o.years} años · ${money(o.salary)}/año · ${o.role} · Encaje ${o.fit}% · ${o.strategyLabel} · Cap ${o.capRoom}%`,offerId:o.id}))};
   }
   const base=[
-    {id:"shooting",title:"Entrenar tiro",text:"+ anotación, ligera fatiga",apply:{scoring:1,workEthic:1,morale:-1}},
-    {id:"body",title:"Mejorar el físico",text:"+ rebote y durabilidad",apply:{rebounds:1,durability:2,morale:-1}},
-    {id:"vision",title:"Trabajar la visión",text:"+ asistencias y confianza del entrenador",apply:{assists:1,coachTrust:4,morale:0}},
-    {id:"rest",title:"Descansar",text:"+ moral y durabilidad",apply:{durability:1,morale:5}},
-    {id:"coach",title:"Hablar con el entrenador",text:"+ confianza, riesgo de tensión",apply:{coachTrust:roll(2,7),morale:roll(-2,2)}}
+    {id:"shooting",title:"Entrenar tiro",text:"Mejora Triple y Media distancia.",apply:{scoring:1,workEthic:1,morale:-1}},
+    {id:"body",title:"Mejorar el físico",text:"Mejora Fuerza, Resistencia y Rebote.",apply:{rebounds:1,durability:2,morale:-1}},
+    {id:"vision",title:"Trabajar la visión",text:"Mejora Pase, Manejo e IQ.",apply:{assists:1,coachTrust:3,morale:0}},
+    {id:"defense",title:"Entrenar defensa",text:"Mejora defensa exterior, interior, robos y tapones.",apply:{coachTrust:2,workEthic:1,morale:-1}},
+    {id:"rest",title:"Descansar",text:"Recupera moral y durabilidad, sin subir atributos.",apply:{durability:1,morale:5}},
+    {id:"coach",title:"Hablar con el entrenador",text:"Mejora la confianza, sin entrenamiento técnico.",apply:{coachTrust:roll(2,7),morale:roll(-2,2)}}
   ];
   if(p.seasonsWithTeam>=3 && (p.morale<80 || p.hidden.ego>70))base.push({id:"trade",title:"Pedir un traspaso",text:"Puedes cambiar de equipo, pero dañará tu reputación interna",special:"trade"});
-  const shuffled=base.sort(()=>Random.next()-.5),trade=shuffled.find(o=>o.special==="trade");
-  const selected=shuffled.filter(o=>o.special!=="trade").slice(0,trade?2:3);if(trade)selected.push(trade);
-  return {type:"summer",title:"Decisión de verano",options:selected};
+  const training=base.filter(o=>["shooting","body","vision","defense"].includes(o.id));
+  const lifestyle=base.filter(o=>!["shooting","body","vision","defense"].includes(o.id)&&o.special!=="trade");
+  const selected=[...training,...lifestyle];
+  const trade=base.find(o=>o.special==="trade");if(trade)selected.push(trade);
+  return {type:"summer",title:"Plan de entrenamiento de verano",text:"Elige cómo desarrollar a tu jugador. Solo se aplica un plan por temporada.",options:selected};
 }
 
 function openContractNegotiation(game,offer){
@@ -396,8 +409,12 @@ export function applyDecision(game,id) {
       if(key==="morale")p.morale=clamp(p.morale+value,0,100);
       else if(key==="coachTrust")p.coachTrust=clamp(p.coachTrust+value,0,100);
       else p.hidden[key]=clamp((p.hidden[key]||0)+value,0,99);
-      if(["shooting","body","vision","defense"].includes(id))trainPlayer(p,id);
     });
+    if(["shooting","body","vision","defense"].includes(id)){
+      trainPlayer(p,id);
+      p.developmentHistory??=[];
+      p.developmentHistory.push({season:game.season,age:p.age,focus:id,ovr:p.ovr});
+    }
   }
   applyCareerDecision(p,{type:game.pendingDecision.type,choiceId:id,special:choice.special,changedTeam:game.pendingDecision.type==="freeAgency"&&choice.teamId!==undefined});
   p.age++; refreshPlayer(p); game.season++; game.pendingDecision=null;
@@ -406,7 +423,7 @@ export function applyDecision(game,id) {
   const wearPenalty=Math.max(0,(p.health?.careerWear||0)-35)*.006;
   const retirementChance=clamp(retirementBase-eliteExtension+wearPenalty,0,.96);
   const voluntaryRetirement=p.age>=34&&Random.chance(retirementChance);
-  game.phase=p.age>=40||p.ovr<=62||voluntaryRetirement?"retired":"season";
+  game.phase=p.age>=40||(p.age>=32&&p.ovr<=62)||voluntaryRetirement?"retired":"season";
   if(game.phase==="retired"){
     addEvent(game,{type:EVENT_TYPES.PLAYER_RETIRED,season:game.season,teamId:p.teamId,data:{playerName:p.name,seasons:p.career.length,teams:p.teamsPlayed.length,allStars:p.allStars,mvps:p.mvps,championships:p.championships}});
     finalizeLegacy(game);

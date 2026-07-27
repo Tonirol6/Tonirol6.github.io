@@ -20,7 +20,7 @@ function viewPlayer(){
 }
 
 
-function createScreen(){return `<section class="card hero create-hero"><div class="court-lines"></div><span class="pill">NBA GLORY 2.0.15 · FRANCHISE CONSEQUENCES</span><h2 style="margin-top:12px">Escribe tu propia leyenda</h2>
+function createScreen(){return `<section class="card hero create-hero"><div class="court-lines"></div><span class="pill">NBA GLORY 2.0.19 · DRAFT PROJECTION</span><h2 style="margin-top:12px">Escribe tu propia leyenda</h2>
 <p class="muted">Empieza en instituto y elige NCAA, G League o Europa. La NBA es una meta posible, no una obligación.</p>
 <form id="createForm"><label>Nombre<input name="name" required maxlength="24" placeholder="Toni Rol"></label>
 <label>Nacionalidad<select name="nationality">${["España","Estados Unidos","Francia","Serbia","Canadá","Alemania","Grecia","Lituania","Italia","Australia","Eslovenia","Turquía","Brasil","Argentina","Puerto Rico","Croacia","Letonia","Japón"].map(x=>`<option>${x}</option>`).join("")}</select></label>

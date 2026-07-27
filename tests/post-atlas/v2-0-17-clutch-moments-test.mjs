@@ -19,6 +19,6 @@ assert.equal(game.careerMode.clutchMoments.history.length,1);
 assert.match(game.lastSummary,/gana|rival/i);
 const legacy={player:{},atlas:{schema:11},careerMode:{}};
 migrateAtlas(legacy);migrateClutchMoments(legacy);
-assert.equal(legacy.atlas.schema,12);
+assert.ok(legacy.atlas.schema>=12);
 assert.ok(legacy.atlas.migrations.some(x=>x.id==='clutch-moments'));
 console.log('✓ NBA Glory 2.0.17 Clutch Moments');

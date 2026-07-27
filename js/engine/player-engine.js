@@ -49,7 +49,7 @@ export function refreshPlayer(player){
  player.potentialGrade=potentialGrade(player.potential);
  return player;
 }
-export function createPlayer({name,position="PG",archetype,age=19,draftPick=null,baseOvr=73,seed}={}){
+export function createPlayer({name,position="PG",archetype,age=16,draftPick=null,baseOvr=58,seed}={}){
  const playerSeed=seed??hash(`${name}|${position}|${Date.now()}|${Random.next()}`),r=rng(playerSeed);
  const selected=normalizeArchetype(position,archetype||pick(r,POSITION_ARCHETYPES[position]));
  const personality=pick(r,["Competitivo","Trabajador","Líder","Profesional","Ambicioso","Sereno"]);
@@ -58,7 +58,7 @@ export function createPlayer({name,position="PG",archetype,age=19,draftPick=null
  Object.values(ATTRIBUTE_GROUPS).flat().forEach(k=>attrs[k]=clamp(baseOvr-5+Math.floor(r()*11)));
  const positionBase={PG:{passing:5,handle:5,speed:3,blocks:-12,rebounding:-7},SG:{threePoint:4,finishing:3,rebounding:-4,blocks:-8},SF:{finishing:3,perimeterDefense:3},PF:{rebounding:5,strength:5,handle:-5},C:{rebounding:8,interiorDefense:8,blocks:10,strength:7,handle:-12,threePoint:-6,speed:-4}}[position]||{};
  [positionBase,ARCHETYPE_BONUS[selected]||{}].forEach(map=>Object.entries(map).forEach(([k,v])=>attrs[k]=clamp(attrs[k]+v)));
- const potential=clamp(baseOvr+6+Math.floor(r()*14),78,95);
+ const potential=clamp(baseOvr+20+Math.floor(r()*16),78,95);
  const player={name:String(name||"Rookie").trim(),position,archetype:selected,age,draftPick,attributes:attrs,dna:{seed:playerSeed,archetype:selected,personality,development,peakAge:26+Math.floor(r()*6),potential,injuryRisk:8+Math.floor(r()*25),workEthic:55+Math.floor(r()*41),clutch:50+Math.floor(r()*46),hiddenTraits:[pick(r,["Competidor","Líder silencioso","Clutch","Profesional"]),pick(r,["Resistente","Inconstante","Leal","Ambicioso"])]}};
  return refreshPlayer(player);
 }
@@ -66,7 +66,7 @@ export function migratePlayer(player){
  if(!player)return player;
  if(!player.attributes||!player.dna){
    const original=player.ovr||72;
-   const generated=createPlayer({name:player.name,position:player.position,archetype:player.archetype,age:player.age||19,draftPick:player.draftPick,baseOvr:original,seed:hash(`${player.name}|${player.position}|${player.draftPick||0}`)});
+   const generated=createPlayer({name:player.name,position:player.position,archetype:player.archetype,age:player.age??16,draftPick:player.draftPick,baseOvr:original,seed:hash(`${player.name}|${player.position}|${player.draftPick||0}`)});
    player.attributes=generated.attributes;player.dna=generated.dna;player.archetype=generated.archetype;
  }
  player.dna.potential=player.dna.potential??player.potential??Math.min(99,(player.ovr||72)+15);

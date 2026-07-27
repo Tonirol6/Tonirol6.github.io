@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {createGame, applyDecision} from '../../js/engine/game-engine.js';
+import {advancePathway, getPathwayOptions} from '../../js/engine/pathway-engine.js';
+import {calculateOVR} from '../../js/engine/player-engine.js';
+import {ATLAS_SCHEMA_VERSION,migrateAtlas} from '../../js/core/universe-core.js';
+
+const game=createGame({name:'Development Tester',position:'PG',archetype:'Floor General',difficulty:'normal',seed:'development-test'});
+assert.equal(game.player.age,16);
+assert.ok(game.player.ovr>=55&&game.player.ovr<=60,`initial OVR ${game.player.ovr}`);
+advancePathway(game,'play_highschool');
+assert.equal(game.player.age,17);
+assert.equal(game.player.preDraft.stage,'training');
+const options=getPathwayOptions(game);
+assert.deepEqual(options.map(x=>x.id),['shooting','body','vision','defense','rest']);
+const before=calculateOVR(game.player);
+advancePathway(game,'shooting');
+assert.equal(game.player.preDraft.stage,'recruiting');
+assert.equal(game.player.preDraft.trainingHistory.length,1);
+assert.ok(calculateOVR(game.player)>=before);
+// Regression: one summer choice must train only once, not once per apply field.
+game.player.teamId='BOS';game.player.contract={yearsLeft:2,salary:10,totalYears:2};game.phase='decision';
+game.pendingDecision={type:'summer',title:'Training',options:[{id:'shooting',title:'Entrenar tiro',apply:{scoring:1,workEthic:1,morale:-1}}]};
+const threeBefore=game.player.attributes.threePoint;
+applyDecision(game,'shooting');
+assert.equal(game.player.attributes.threePoint,threeBefore+1);
+assert.ok(game.player.developmentHistory?.length===1);
+const legacy={player:{},atlas:{schema:12,migrations:[]}};migrateAtlas(legacy);
+assert.equal(legacy.atlas.schema,ATLAS_SCHEMA_VERSION);
+assert.ok(legacy.atlas.migrations.some(x=>x.id==='player-development'));
+console.log('✓ NBA Glory 2.0.18 Player Development');

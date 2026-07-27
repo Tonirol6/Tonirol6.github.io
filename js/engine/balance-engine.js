@@ -33,10 +33,11 @@ export function calculateDevelopmentDelta({player,coach,minutes,games,role,injur
  const opportunity=clamp((minutes-22)/11,-1.1,1.15)*clamp(games/72,.35,1.05);
  const roleBonus={Superestrella:-.1,Titular:.15,"Sexto hombre":.1,"Rotación":0,Proyecto:-.2}[role]||0;
  const ageCurve=age<=21?1.15:age<=24?.75:age<peak?.3:age<=peak+1?0:age<=32?-.65:age<=35?-1.25:-1.9;
- const ceiling=gap<=1?-1.35:gap<=4?-.65:gap>=12?.25:0;
+ const ceiling=gap<=1?-1.35:gap<=4?-.65:gap>=20?1.15:gap>=12?.55:0;
+ const prospectCatchup=age<=24&&gap>=10?.65:0;
  const health=injury?.severe?-1.5:injury?-.35:0;
  const coachEffect=((coach?.development||4)-4)/14;
- return clamp(Math.round(ageCurve+dev+opportunity+roleBonus+work/30+ceiling+health+coachEffect),-4,4);
+ return clamp(Math.round(ageCurve+dev+opportunity+roleBonus+work/30+ceiling+prospectCatchup+health+coachEffect),-4,4);
 }
 export function normalizeSeasonStats(stats,player){
  const pos=player.position;
