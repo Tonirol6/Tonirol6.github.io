@@ -1,1 +1,0 @@
-{"name":"nba-glory","version":"0.8.0-beta.1c","type":"module","private":true,"scripts":{"test":"node tests/beta-smoke-test.mjs"}}
