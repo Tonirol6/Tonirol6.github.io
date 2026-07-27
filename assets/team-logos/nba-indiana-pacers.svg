@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Indiana Pacers">
+<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#002D62"/><stop offset="1" stop-color="#FDBB30"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity=".35"/></filter></defs>
+<path filter="url(#s)" d="M64 5 112 25v39c0 30-18 48-48 59C34 112 16 94 16 64V25Z" fill="url(#g)" stroke="rgba(255,255,255,.75)" stroke-width="3"/>
+<circle cx="64" cy="59" r="32" fill="rgba(4,7,14,.34)" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+<text x="64" y="68" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="900" fill="white">IP</text>
+<text x="64" y="103" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="800" letter-spacing="1.4" fill="white">NBA</text></svg>
