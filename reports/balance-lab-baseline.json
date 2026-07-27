@@ -1,0 +1,121 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-07-27T08:18:30.163Z",
+  "sampleSize": 24,
+  "meta": {
+    "maxSeasons": 25,
+    "seedPrefix": "nba-glory-2.0.12",
+    "strategies": [
+      "balanced",
+      "aggressive",
+      "loyalty",
+      "money"
+    ]
+  },
+  "metrics": {
+    "careerSeasons": 19,
+    "retirementAge": 38,
+    "peakOvr": 91.79,
+    "finalOvr": 89.13,
+    "teamsPlayed": 1.54,
+    "allStars": 13.71,
+    "mvps": 0,
+    "championships": 0.13,
+    "injuries": 6.67,
+    "severeInjuries": 0.08,
+    "draftPick": 44.79,
+    "hallOfFameRate": 0,
+    "superstarRate": 1,
+    "journeymanRate": 0,
+    "mvpRate": 0,
+    "championRate": 0.125,
+    "earlyRetirementRate": 0
+  },
+  "distributions": {
+    "careerSeasons": {
+      "p10": 19,
+      "median": 19,
+      "p90": 19
+    },
+    "peakOvr": {
+      "p10": 90,
+      "median": 91,
+      "p90": 94
+    },
+    "allStars": {
+      "p10": 12,
+      "median": 14,
+      "p90": 15
+    },
+    "injuries": {
+      "p10": 3.3,
+      "median": 6,
+      "p90": 10.7
+    }
+  },
+  "evaluation": {
+    "ok": false,
+    "diagnostics": [
+      {
+        "key": "allStars",
+        "value": 13.71,
+        "status": "high",
+        "expected": [
+          1,
+          8
+        ],
+        "severity": "warning"
+      },
+      {
+        "key": "mvps",
+        "value": 0,
+        "status": "low",
+        "expected": [
+          0.05,
+          2.5
+        ],
+        "severity": "warning"
+      },
+      {
+        "key": "championships",
+        "value": 0.13,
+        "status": "low",
+        "expected": [
+          0.15,
+          3.5
+        ],
+        "severity": "warning"
+      },
+      {
+        "key": "hallOfFameRate",
+        "value": 0,
+        "status": "low",
+        "expected": [
+          0.08,
+          0.55
+        ],
+        "severity": "warning"
+      },
+      {
+        "key": "superstarRate",
+        "value": 1,
+        "status": "high",
+        "expected": [
+          0.08,
+          0.45
+        ],
+        "severity": "warning"
+      },
+      {
+        "key": "journeymanRate",
+        "value": 0,
+        "status": "low",
+        "expected": [
+          0.08,
+          0.5
+        ],
+        "severity": "info"
+      }
+    ]
+  }
+}

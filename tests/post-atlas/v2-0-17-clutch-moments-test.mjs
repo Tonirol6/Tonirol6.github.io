@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import {createGame, migrateGame} from '../../js/engine/game-engine.js';
+import {createClutchMoment, applyClutchChoice, migrateClutchMoments} from '../../js/engine/clutch-moments-engine.js';
+import {migrateAtlas} from '../../js/core/universe-core.js';
+
+const game=createGame({name:'Clutch Tester',position:'PG',archetype:'Floor General',difficulty:'normal',seed:'clutch-test'});
+game.player.teamId='BOS';
+game.player.contract={yearsLeft:3,salary:10,type:'Test',totalYears:3};
+game.player.career.push({season:2026,team:'Boston Celtics',teamId:'BOS',playoffs:true,playoffExit:'Finales NBA',roundsWon:3,champion:false,ppg:25,apg:8,rpg:5,seasonResult:{nba:{champion:false,playoffExit:'Finales NBA'}}});
+migrateGame(game);
+const moment=createClutchMoment(game,game.player.career.at(-1));
+assert.equal(moment.type,'clutchGame');
+assert.equal(moment.totalPossessions,4);
+assert.equal(moment.options.length,3);
+game.pendingDecision=moment;
+for(let i=0;i<4;i++) applyClutchChoice(game,game.pendingDecision.options[0].id);
+assert.ok(game.player.career.at(-1).clutchMoment);
+assert.equal(game.careerMode.clutchMoments.history.length,1);
+assert.match(game.lastSummary,/gana|rival/i);
+const legacy={player:{},atlas:{schema:11},careerMode:{}};
+migrateAtlas(legacy);migrateClutchMoments(legacy);
+assert.equal(legacy.atlas.schema,12);
+assert.ok(legacy.atlas.migrations.some(x=>x.id==='clutch-moments'));
+console.log('✓ NBA Glory 2.0.17 Clutch Moments');

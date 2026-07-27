@@ -1,0 +1,9 @@
+{
+  "name": "NBA Glory v2.0.17 Clutch Moments",
+  "short_name": "NBA Glory 2.0.17",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#080b14",
+  "theme_color": "#080b14",
+  "description": "Simulador de carrera de baloncesto con arquitectura Atlas y una interfaz modular."
+}

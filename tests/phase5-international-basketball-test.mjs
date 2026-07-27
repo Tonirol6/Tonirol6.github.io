@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {createGame} from '../js/engine/game-engine.js';
+import {migrateInternational,prepareInternationalInvitation,applyInternationalChoice,getInternationalDashboard,simulateInternationalTournament} from '../js/engine/international-engine.js';
+
+const game=createGame({name:'Toni Rol',position:'SF',archetype:'Anotador',nationality:'España'});
+game.player.age=25;game.player.ovr=93;game.player.teamId='MIA';game.phase='season';
+migrateInternational(game);
+assert.equal(game.player.international.teamId,'ESP');
+const olympics={id:'olympics-2028',type:'olympics',name:'Juegos Olímpicos',season:2028,scope:'world'};
+game.season=2028;
+const invitation=prepareInternationalInvitation(game,{allStar:true,mvp:true,champion:false});
+assert.equal(invitation.type,'internationalInvitation');
+game.pendingDecision=invitation;
+const text=applyInternationalChoice(game,'accept_international');
+assert.match(text,/Juegos Olímpicos/);
+const dash=getInternationalDashboard(game);
+assert.equal(dash.tournaments.length,1);
+assert.ok(dash.career.caps>=5);
+assert.equal(dash.rankings.length,12);
+const second={id:'worldcup-2031',type:'worldCup',name:'Mundial FIBA',season:2031,scope:'world'};
+simulateInternationalTournament(game,second,{participates:false,aiOnly:true});
+assert.equal(getInternationalDashboard(game).tournaments.length,2);
+console.log('✓ Phase 5 international basketball tests passed');

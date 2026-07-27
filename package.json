@@ -1,0 +1,11 @@
+{
+  "name": "nba-glory",
+  "version": "2.0.17",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node tests/beta-smoke-test.mjs && node tests/phase2-world-simulation-test.mjs && node tests/phase3-living-free-agency-test.mjs && node tests/phase4-living-league-test.mjs && node tests/phase5-international-basketball-test.mjs && node tests/phase6-ncaa-draft-revolution-test.mjs && node tests/phase7-european-basketball-test.mjs && node tests/phase8-basketball-encyclopedia-test.mjs && node tests/atlas/phase1-atlas-core-test.mjs && node tests/atlas/phase2-save-engine-test.mjs && node tests/atlas/phase3-entity-repository-test.mjs && node tests/atlas/phase4-simulation-engine-test.mjs && node tests/atlas/phase5-competition-profiles-test.mjs && node tests/atlas/phase6-universal-simulation-test.mjs && node tests/atlas/phase7-decoupled-ui-test.mjs && node tests/atlas/phase8-atlas-closure-test.mjs && node tests/post-atlas/v2-0-8-random-engine-test.mjs && node tests/post-atlas/v2-0-9-repository-completion-test.mjs && node tests/post-atlas/v2-0-10-modular-ui-test.mjs && node tests/post-atlas/v2-0-11-ui-experience-test.mjs && node tests/post-atlas/v2-0-12-balance-lab-test.mjs && node tests/post-atlas/v2-0-13-balance-tuning-test.mjs && node tests/post-atlas/v2-0-14-career-variety-test.mjs && node tests/post-atlas/v2-0-15-franchise-consequences-test.mjs && node tests/post-atlas/v2-0-16-coaching-systems-test.mjs && node tests/post-atlas/v2-0-17-clutch-moments-test.mjs",
+    "balance": "node scripts/run-balance-lab.mjs"
+  },
+  "description": "NBA Glory 2.0.17 Clutch Moments: minijuegos interactivos en partidos decisivos"
+}

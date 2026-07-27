@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {createGame,migrateGame} from '../../js/engine/game-engine.js';
+import {migrateFranchiseConsequences,processFranchiseConsequences,applyFranchiseConsequenceChoice} from '../../js/engine/franchise-consequences-engine.js';
+
+const game=createGame({name:'Atlas Pressure',position:'SG',archetype:'Shot Creator',difficulty:'hard',seed:'v2.0.15-test'});
+game.phase='season';game.player.teamId='BOS';game.player.contract={yearsLeft:2,totalYears:4,salary:8};game.player.role='Titular';game.player.teamsPlayed=['BOS'];
+game.careerMode.difficulty.pressure=92;
+const state=migrateFranchiseConsequences(game);
+const season={season:2028,wins:28,per:12,allStar:false,champion:false};
+const results=[{status:'failed'},{status:'failed'},{status:'completed'}];
+const outcome=processFranchiseConsequences(game,season,results,{replaceCoach:()=> 'El entrenador ha sido sustituido.'});
+assert.equal(outcome.decision.type,'franchiseUltimatum');
+assert.ok(state.contractObjectives.some(o=>o.season===2029));
+assert.notEqual(game.player.role,'Titular');
+const trade=applyFranchiseConsequenceChoice(game,outcome.decision.options.find(o=>o.id==='request_trade'));
+assert.ok(trade.trade.destination.id!== 'BOS');
+assert.equal(state.activeUltimatum,null);
+const legacy=migrateGame({player:{name:'Legacy',teamId:null},season:2026,phase:'pathway',atlas:{schema:9}});
+assert.ok(legacy.atlas.schema>=10);
+assert.ok(legacy.atlas.migrations.some(m=>m.id==='franchise-consequences'));
+console.log('✓ v2.0.15 franchise consequences');
